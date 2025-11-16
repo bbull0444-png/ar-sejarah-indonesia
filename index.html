@@ -133,7 +133,7 @@
         
         <a-entity camera></a-entity>
 
-        <!-- Barcode 0: Borobudur -->
+        <!-- Barcode 0: Borobudur (OK - Original) -->
         <a-marker type="barcode" value="0">
             <a-entity 
                 gltf-model="url(Borobudur.glb)" 
@@ -143,27 +143,27 @@
             </a-entity>
         </a-marker>
 
-        <!-- Test: Barcode 1 pakai model Arca Buddha -->
+        <!-- Barcode 1: Prasasti Ciaruteun (TEMP - Pakai Arca Buddha) -->
         <a-marker type="barcode" value="1">
             <a-entity 
                 gltf-model="url(models/arca-buddha.glb)" 
-            scale="0.5 0.5 0.5" 
-            position="0 0.3 0" 
-            rotation="-90 0 0">
+                scale="0.5 0.5 0.5" 
+                position="0 0.3 0" 
+                rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 2: Dolmen -->
+        <!-- Barcode 2: Dolmen (TEMP - Pakai Brahma) -->
         <a-marker type="barcode" value="2">
             <a-entity 
-                gltf-model="url(models/dolmen.glb)" 
+                gltf-model="url(models/brahma.glb)" 
                 scale="0.8 0.8 0.8" 
                 position="0 0.4 0" 
                 rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 3: Arca Buddha -->
+        <!-- Barcode 3: Arca Buddha (OK - Original) -->
         <a-marker type="barcode" value="3">
             <a-entity 
                 gltf-model="url(models/arca-buddha.glb)" 
@@ -173,37 +173,37 @@
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 4: Kjokkenmoddinger -->
+        <!-- Barcode 4: Kjokkenmoddinger (TEMP - Pakai Homo Erectus) -->
         <a-marker type="barcode" value="4">
             <a-entity 
-                gltf-model="url(models/kjokkenmoddinger.glb)" 
+                gltf-model="url(models/homo-erectus.glb)" 
                 scale="0.4 0.4 0.4" 
                 position="0 0.2 0" 
                 rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 5: Menhir -->
+        <!-- Barcode 5: Menhir (TEMP - Pakai Borobudur) -->
         <a-marker type="barcode" value="5">
             <a-entity 
-                gltf-model="url(models/menhir.glb)" 
+                gltf-model="url(Borobudur.glb)" 
                 scale="0.7 0.7 0.7" 
                 position="0 0.4 0" 
                 rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 6: Prambanan -->
+        <!-- Barcode 6: Prambanan (TEMP - Pakai Arca Buddha) -->
         <a-marker type="barcode" value="6">
             <a-entity 
-                gltf-model="url(models/prambanan.glb)" 
-                scale="0,5 0,5 0,5" 
-                position="0 0.3 0" 
+                gltf-model="url(models/arca-buddha.glb)" 
+                scale="1 1 1" 
+                position="0 0.5 0" 
                 rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 7: Brahma -->
+        <!-- Barcode 7: Brahma (OK - Original) -->
         <a-marker type="barcode" value="7">
             <a-entity 
                 gltf-model="url(models/brahma.glb)" 
@@ -213,17 +213,17 @@
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 8: Meganthropus -->
+        <!-- Barcode 8: Meganthropus (TEMP - Pakai Brahma) -->
         <a-marker type="barcode" value="8">
             <a-entity 
-                gltf-model="url(models/meganthropus.glb)" 
+                gltf-model="url(models/brahma.glb)" 
                 scale="0.4 0.4 0.4" 
                 position="0 0.3 0" 
                 rotation="-90 0 0">
             </a-entity>
         </a-marker>
 
-        <!-- Barcode 9: Homo Erectus -->
+        <!-- Barcode 9: Homo Erectus (OK - Original) -->
         <a-marker type="barcode" value="9">
             <a-entity 
                 gltf-model="url(models/homo-erectus.glb)" 
@@ -247,11 +247,11 @@
             },
             '1': {
                 title: "📜 Prasasti Ciaruteun (Barcode 1)",
-                html: '<p>Prasasti peninggalan <strong>Kerajaan Tarumanegara</strong> ditemukan di Cibungbulang, Bogor.</p><h2>Struktur</h2><ul><li><strong>Inskripsi A:</strong> 4 baris aksara Pallawa bahasa Sanskerta</li><li><strong>Inskripsi B:</strong> 1 baris, belum terbaca jelas</li></ul><h2>Makna</h2><p>Terdapat gambar <strong>sepasang telapak kaki Raja Purnawarman</strong> yang disamakan dengan kaki Dewa Wisnu sebagai penghormatan.</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Prasasti peninggalan <strong>Kerajaan Tarumanegara</strong> ditemukan di Cibungbulang, Bogor.</p><h2>Struktur</h2><ul><li><strong>Inskripsi A:</strong> 4 baris aksara Pallawa bahasa Sanskerta</li><li><strong>Inskripsi B:</strong> 1 baris, belum terbaca jelas</li></ul><h2>Makna</h2><p>Terdapat gambar <strong>sepasang telapak kaki Raja Purnawarman</strong> yang disamakan dengan kaki Dewa Wisnu sebagai penghormatan.</p>'
             },
             '2': {
                 title: "🪨 Dolmen (Barcode 2)",
-                html: '<p>Dari bahasa Breton: "dol" (meja) + "men" (batu). Meja batu besar dari batu tegak penyangga dan batu datar di atasnya.</p><h2>Fungsi</h2><ul><li>Tempat sesaji untuk arwah nenek moyang</li><li>Penutup kubur batu</li></ul><h2>Lokasi</h2><p>Bondowoso, Puger (Jawa Timur), Paseman (Sumsel), Sumba (NTT)</p><p>Menunjukkan <strong>stratifikasi sosial</strong> - hanya tokoh penting dikuburkan dengan Dolmen.</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dari bahasa Breton: "dol" (meja) + "men" (batu). Meja batu besar dari batu tegak penyangga dan batu datar di atasnya.</p><h2>Fungsi</h2><ul><li>Tempat sesaji untuk arwah nenek moyang</li><li>Penutup kubur batu</li></ul><h2>Lokasi</h2><p>Bondowoso, Puger (Jawa Timur), Paseman (Sumsel), Sumba (NTT)</p><p>Menunjukkan <strong>stratifikasi sosial</strong> - hanya tokoh penting dikuburkan dengan Dolmen.</p>'
             },
             '3': {
                 title: "🙏 Arca Buddha (Barcode 3)",
@@ -259,15 +259,15 @@
             },
             '4': {
                 title: "🐚 Kjokkenmoddinger (Barcode 4)",
-                html: '<p>Dari Denmark: "kjokken" (dapur) + "modding" (sampah). Tumpukan kulit kerang manusia purba tepi pantai masa Mesolitikum.</p><h2>Ciri-ciri</h2><ul><li>Tumpukan kulit kerang/siput</li><li>Alat batu sederhana (kapak genggam)</li><li>Pola berburu dan meramu</li><li>Di pesisir pantai/muara sungai</li></ul><h2>Lokasi di Indonesia</h2><p>Sumatra Utara (Lhok Seumawe, Medan), Sumatra Timur (Langsa, Binjai)</p><p>Bukti kehidupan <strong>semi-nomaden</strong> bergantung hasil laut.</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dari Denmark: "kjokken" (dapur) + "modding" (sampah). Tumpukan kulit kerang manusia purba tepi pantai masa Mesolitikum.</p><h2>Ciri-ciri</h2><ul><li>Tumpukan kulit kerang/siput</li><li>Alat batu sederhana (kapak genggam)</li><li>Pola berburu dan meramu</li><li>Di pesisir pantai/muara sungai</li></ul><h2>Lokasi di Indonesia</h2><p>Sumatra Utara (Lhok Seumawe, Medan), Sumatra Timur (Langsa, Binjai)</p><p>Bukti kehidupan <strong>semi-nomaden</strong> bergantung hasil laut.</p>'
             },
             '5': {
                 title: "🗿 Menhir (Barcode 5)",
-                html: '<p>Batu tegak megalitik sebagai penghormatan leluhur dan simbol arwah dalam upacara keagamaan prasejarah.</p><h2>Fungsi</h2><ul><li>Batu peringatan dan tanda kubur</li><li>Medium pemujaan roh nenek moyang</li><li>Simbol hubungan manusia-dunia spiritual</li></ul><h2>Transformasi</h2><p>Pada Islamisasi Maluku (Kerajaan Hitu), batu tegak diadaptasi jadi <strong>nisan makam Islam</strong>.</p><p>Menunjukkan <strong>akulturasi</strong> Islam dengan tradisi megalitik - penghormatan leluhur tetap terjaga.</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Batu tegak megalitik sebagai penghormatan leluhur dan simbol arwah dalam upacara keagamaan prasejarah.</p><h2>Fungsi</h2><ul><li>Batu peringatan dan tanda kubur</li><li>Medium pemujaan roh nenek moyang</li><li>Simbol hubungan manusia-dunia spiritual</li></ul><h2>Transformasi</h2><p>Pada Islamisasi Maluku (Kerajaan Hitu), batu tegak diadaptasi jadi <strong>nisan makam Islam</strong>.</p><p>Menunjukkan <strong>akulturasi</strong> Islam dengan tradisi megalitik - penghormatan leluhur tetap terjaga.</p>'
             },
             '6': {
                 title: "🛕 Candi Prambanan (Barcode 6)",
-                html: '<p>Dibangun era <strong>Kerajaan Mataram Kuno</strong> (abad 8-10). Terdiri <strong>240 struktur candi</strong>.</p><h2>Sejarah</h2><p>Dimulai oleh <strong>Rakai Pikatan</strong>, diresmikan <strong>778 Saka (856 M)</strong> oleh Rakai Kayuwangi.</p><h2>Arsitektur</h2><p>Berdasarkan <strong>Prasasti Siwagraha</strong>, didedikasikan untuk <strong>Trimurti</strong> (Wisnu, Brahma, Siwa). Mengikuti pola <strong>mandala</strong> dan bentuk <strong>Gunung Mahameru</strong>.</p><p>Struktur mencerminkan kosmologi Hindu tiga loka (ranah alam semesta).</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dibangun era <strong>Kerajaan Mataram Kuno</strong> (abad 8-10). Terdiri <strong>240 struktur candi</strong>.</p><h2>Sejarah</h2><p>Dimulai oleh <strong>Rakai Pikatan</strong>, diresmikan <strong>778 Saka (856 M)</strong> oleh Rakai Kayuwangi.</p><h2>Arsitektur</h2><p>Berdasarkan <strong>Prasasti Siwagraha</strong>, didedikasikan untuk <strong>Trimurti</strong> (Wisnu, Brahma, Siwa). Mengikuti pola <strong>mandala</strong> dan bentuk <strong>Gunung Mahameru</strong>.</p><p>Struktur mencerminkan kosmologi Hindu tiga loka (ranah alam semesta).</p>'
             },
             '7': {
                 title: "🔱 Dewa Brahma (Barcode 7)",
@@ -275,7 +275,7 @@
             },
             '8': {
                 title: "🦴 Meganthropus Paleojavanicus (Barcode 8)",
-                html: '<p>Manusia purba tertua di Indonesia, fosil ditemukan di <strong>Sangiran</strong> oleh <strong>von Koenigswald (1937-1941)</strong>. Hidup <strong>1-2 juta tahun lalu</strong>.</p><h2>Ciri Fisik</h2><ul><li>Tinggi ±2,5 m, postur besar kokoh</li><li>Otak ±900 cc</li><li>Dahi tebal, tulang pipi kuat</li><li>Gigi geraham besar kuat</li><li>Berjalan membungkuk</li><li>Tangan lebih panjang dari kaki</li></ul><h2>Kehidupan</h2><p><strong>Nomaden</strong>, herbivora (umbi, akar, biji). Ditemukan alat batu sederhana (kapak genggam).</p>'
+                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Manusia purba tertua di Indonesia, fosil ditemukan di <strong>Sangiran</strong> oleh <strong>von Koenigswald (1937-1941)</strong>. Hidup <strong>1-2 juta tahun lalu</strong>.</p><h2>Ciri Fisik</h2><ul><li>Tinggi ±2,5 m, postur besar kokoh</li><li>Otak ±900 cc</li><li>Dahi tebal, tulang pipi kuat</li><li>Gigi geraham besar kuat</li><li>Berjalan membungkuk</li><li>Tangan lebih panjang dari kaki</li></ul><h2>Kehidupan</h2><p><strong>Nomaden</strong>, herbivora (umbi, akar, biji). Ditemukan alat batu sederhana (kapak genggam).</p>'
             },
             '9': {
                 title: "🚶 Homo Erectus (Barcode 9)",
@@ -288,7 +288,7 @@
         markers.forEach(marker => {
             marker.addEventListener('markerFound', function() {
                 const barcodeValue = this.getAttribute('value');
-                console.log('Marker found: Barcode ' + barcodeValue);
+                console.log('✅ Marker found: Barcode ' + barcodeValue);
                 
                 loading.style.display = 'none';
                 showInfo(barcodeValue);
@@ -296,7 +296,7 @@
 
             marker.addEventListener('markerLost', function() {
                 const barcodeValue = this.getAttribute('value');
-                console.log('Marker lost: Barcode ' + barcodeValue);
+                console.log('❌ Marker lost: Barcode ' + barcodeValue);
                 
                 loading.style.display = 'block';
                 loading.textContent = 'Marker hilang, cari marker untuk melanjutkan...';
