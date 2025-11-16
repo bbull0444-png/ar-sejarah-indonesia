@@ -66,10 +66,10 @@
 <body>
     <div id="info-overlay"><div id="info-content"></div></div>
     <div id="instructions">📷 Arahkan kamera ke barcode marker (0-9)</div>
-    <div id="touch-hint">👆 Geser kiri/kanan untuk putar model 360°</div>
+    <div id="touch-hint">👆 Drag untuk putar model 360° (semua arah)</div>
     <div class="loading" id="loading">Memuat AR...</div>
 
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;" vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true; precision: medium; antialias: true;" loading-screen="enabled: false" gesture-detector>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;" vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true; precision: medium; antialias: true;" loading-screen="enabled: false">
         
         <a-entity camera></a-entity>
 
@@ -134,6 +134,7 @@
         let activeModel = null;
         let isDragging = false;
         let previousMouseX = 0;
+        let previousMouseY = 0;
         let markerVisible = false;
 
         const objInfo = {
@@ -216,43 +217,71 @@
             if (e.target.id === 'info-overlay') infoOverlay.classList.remove('show');
         });
 
-        const sensitivity = 0.8;
+        const sensitivity = 0.5;
 
+        // MOUSE EVENTS - Rotasi 2 arah (horizontal + vertikal)
         scene.addEventListener('mousedown', (e) => {
             if (!markerVisible || !activeModel) return;
             isDragging = true;
             previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
         });
 
         scene.addEventListener('mousemove', (e) => {
             if (!isDragging || !markerVisible || !activeModel) return;
+            
             const deltaX = e.clientX - previousMouseX;
+            const deltaY = e.clientY - previousMouseY;
+            
             currentRotation.y += deltaX * sensitivity;
-            activeModel.setAttribute('rotation', currentRotation.x + ' ' + currentRotation.y + ' ' + currentRotation.z);
+            currentRotation.x += deltaY * sensitivity;
+            
+            // Batasi rotasi X agar tidak terlalu ekstrem
+            currentRotation.x = Math.max(-180, Math.min(0, currentRotation.x));
+            
+            activeModel.setAttribute('rotation', 
+                currentRotation.x + ' ' + currentRotation.y + ' ' + currentRotation.z);
+            
             previousMouseX = e.clientX;
+            previousMouseY = e.clientY;
         });
 
         scene.addEventListener('mouseup', () => { isDragging = false; });
 
+        // TOUCH EVENTS - Rotasi 2 arah (horizontal + vertikal)
         scene.addEventListener('touchstart', (e) => {
             if (!markerVisible || !activeModel || e.touches.length !== 1) return;
             isDragging = true;
             previousMouseX = e.touches[0].clientX;
+            previousMouseY = e.touches[0].clientY;
             e.preventDefault();
         }, {passive: false});
 
         scene.addEventListener('touchmove', (e) => {
             if (!isDragging || !markerVisible || !activeModel || e.touches.length !== 1) return;
+            
             const deltaX = e.touches[0].clientX - previousMouseX;
+            const deltaY = e.touches[0].clientY - previousMouseY;
+            
             currentRotation.y += deltaX * sensitivity;
-            activeModel.setAttribute('rotation', currentRotation.x + ' ' + currentRotation.y + ' ' + currentRotation.z);
+            currentRotation.x += deltaY * sensitivity;
+            
+            // Batasi rotasi X agar tidak terlalu ekstrem
+            currentRotation.x = Math.max(-180, Math.min(0, currentRotation.x));
+            
+            activeModel.setAttribute('rotation', 
+                currentRotation.x + ' ' + currentRotation.y + ' ' + currentRotation.z);
+            
             previousMouseX = e.touches[0].clientX;
+            previousMouseY = e.touches[0].clientY;
             e.preventDefault();
         }, {passive: false});
 
         scene.addEventListener('touchend', () => { isDragging = false; });
 
-        setTimeout(() => { loading.textContent = 'Cari barcode marker (0-9) dengan kamera untuk memulai...'; }, 2000);
+        setTimeout(() => { 
+            loading.textContent = 'Cari barcode marker (0-9) dengan kamera untuk memulai...'; 
+        }, 2000);
     </script>
 </body>
 </html>
