@@ -1,1 +1,777 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Tour - Sejarah Indonesia</title>
+    
+    <!-- Pannellum CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="src/css/tour-view.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* Main Container */
+        #panorama-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        #panorama {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button:hover {
+            background: white;
+            transform: translateX(-5px);
+        }
+
+        .title-bar {
+            color: white;
+            text-align: center;
+            flex: 1;
+            margin: 0 20px;
+        }
+
+        .title-bar h1 {
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
+
+        .title-bar p {
+            font-size: 14px;
+            opacity: 0.9;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            padding: 30px 20px 20px;
+            z-index: 1000;
+        }
+
+        .scene-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .scene-button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border: 3px solid transparent;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .scene-button:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .scene-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: white;
+        }
+
+        /* Info Panel */
+        .info-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            max-width: 350px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .info-panel.hidden {
+            transform: translateY(-50%) translateX(400px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .info-panel h2 {
+            color: #667eea;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .info-panel p {
+            color: #333;
+            line-height: 1.7;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .info-panel ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .info-panel li {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .info-toggle {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .info-toggle:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-content h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .loading-content p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Compass */
+        .compass {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title-bar h1 {
+                font-size: 18px;
+            }
+
+            .title-bar p {
+                font-size: 12px;
+            }
+
+            .scene-button {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+
+            .info-panel {
+                right: 10px;
+                max-width: 90%;
+                max-height: 50vh;
+            }
+
+            .info-panel.hidden {
+                transform: translateY(100vh);
+            }
+
+            .info-toggle {
+                right: 10px;
+                top: auto;
+                bottom: 150px;
+            }
+
+            .compass {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+                bottom: 150px;
+            }
+
+            .fullscreen-btn {
+                display: none;
+            }
+        }
+
+        /* Scrollbar */
+        .info-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .info-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .info-panel::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Memuat Virtual Tour...</h2>
+            <p>Mohon tunggu sebentar</p>
+        </div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <button class="back-button" onclick="goBack()">
+            ← Kembali ke AR
+        </button>
+        <div class="title-bar">
+            <h1 id="tour-title">Virtual Tour</h1>
+            <p id="tour-subtitle">Jelajahi dengan menggeser layar</p>
+        </div>
+        <div style="width: 120px;"></div> <!-- Spacer for centering -->
+    </div>
+
+    <!-- Panorama Container -->
+    <div id="panorama-container">
+        <div id="panorama"></div>
+    </div>
+
+    <!-- Info Toggle Button -->
+    <button class="info-toggle" onclick="toggleInfo()">
+        ℹ️
+    </button>
+
+    <!-- Info Panel -->
+    <div class="info-panel" id="info-panel">
+        <h2 id="info-title">Informasi</h2>
+        <div id="info-content">
+            <p>Pilih scene untuk melihat informasi detail.</p>
+        </div>
+    </div>
+
+    <!-- Compass -->
+    <div class="compass">
+        🧭
+    </div>
+
+    <!-- Fullscreen Button -->
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+        ⛶
+    </button>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="scene-selector" id="scene-selector">
+            <!-- Scene buttons will be generated dynamically -->
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="src/js/tour-viewer.js"></script>
+    
+    <script>
+        // Get temple parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const templeName = urlParams.get('temple') || 'borobudur';
+
+        // Tour configurations
+        const tourConfigs = {
+            borobudur: {
+                title: 'Candi Borobudur',
+                subtitle: 'Kompleks candi Buddha terbesar di dunia',
+                scenes: {
+                    'stupa-utama': {
+                        title: 'Stupa Utama',
+                        image: 'assets/virtual-tours/borobudur/scene-1.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Stupa Utama - Arupadhatu',
+                            content: `
+                                <p><strong>Stupa Utama</strong> adalah puncak tertinggi Candi Borobudur yang melambangkan <strong>Arupadhatu</strong> (dunia tanpa bentuk).</p>
+                                <p>Di sekitar stupa utama terdapat <strong>72 stupa berlubang</strong> yang masing-masing berisi arca Buddha dalam posisi Dharmachakra Mudra (memutar roda dharma).</p>
+                                <h3>Fakta Menarik:</h3>
+                                <ul>
+                                    <li>Tinggi stupa utama: <strong>35 meter</strong> dari permukaan tanah</li>
+                                    <li>Diameter stupa utama: <strong>9,9 meter</strong></li>
+                                    <li>Stupa berlubang melambangkan <strong>pencapaian nirwana</strong></li>
+                                    <li>Arca Buddha di dalam stupa bisa dilihat dari lubang-lubang berlian</li>
+                                </ul>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: -10,
+                                yaw: 90,
+                                type: 'scene',
+                                text: 'Lihat Relief Lalitavistara',
+                                sceneId: 'relief',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: 5,
+                                yaw: 270,
+                                type: 'info',
+                                text: '72 stupa berlubang berisi arca Buddha',
+                                cssClass: 'hotspot-info'
+                            }
+                        ]
+                    },
+                    'relief': {
+                        title: 'Relief Lalitavistara',
+                        image: 'assets/virtual-tours/borobudur/scene-2.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Relief Lalitavistara',
+                            content: `
+                                <p><strong>Relief Lalitavistara</strong> menceritakan kisah kehidupan <strong>Buddha Gautama</strong> dari kelahiran hingga mencapai pencerahan.</p>
+                                <p>Relief ini terletak di dinding lorong pertama Borobudur dan terdiri dari <strong>120 panel</strong> yang menggambarkan kisah secara kronologis.</p>
+                                <h3>Yang Diceritakan:</h3>
+                                <ul>
+                                    <li>Kelahiran Pangeran Siddhartha</li>
+                                    <li>Kehidupan istana yang mewah</li>
+                                    <li>Empat pertanda (tua, sakit, mati, pertapa)</li>
+                                    <li>Meninggalkan istana mencari pencerahan</li>
+                                    <li>Meditasi di bawah pohon Bodhi</li>
+                                    <li>Mencapai nirwana dan menjadi Buddha</li>
+                                </ul>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: 0,
+                                yaw: 0,
+                                type: 'scene',
+                                text: 'Kembali ke Stupa Utama',
+                                sceneId: 'stupa-utama',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: -5,
+                                yaw: 180,
+                                type: 'scene',
+                                text: 'Lihat Lorong Candi',
+                                sceneId: 'lorong',
+                                cssClass: 'hotspot-scene'
+                            }
+                        ]
+                    },
+                    'lorong': {
+                        title: 'Lorong Candi',
+                        image: 'assets/virtual-tours/borobudur/scene-3.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Lorong Candi',
+                            content: `
+                                <p>Borobudur memiliki <strong>5 lorong konsentris</strong> yang melingkari candi. Setiap lorong memiliki dinding berlapis relief yang menceritakan berbagai kisah.</p>
+                                <p>Total ada <strong>2.672 panel relief</strong> dan <strong>504 arca Buddha</strong> tersebar di seluruh lorong.</p>
+                                <h3>Tingkatan Lorong:</h3>
+                                <ul>
+                                    <li><strong>Lorong 1:</strong> Relief Lalitavistara & Jataka/Avadana</li>
+                                    <li><strong>Lorong 2:</strong> Relief Jataka/Avadana</li>
+                                    <li><strong>Lorong 3:</strong> Relief Gandavyuha</li>
+                                    <li><strong>Lorong 4:</strong> Relief Gandavyuha (lanjutan)</li>
+                                </ul>
+                                <p>Pengunjung tradisional berjalan searah jarum jam (pradaksina) sambil membaca relief.</p>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: 0,
+                                yaw: 90,
+                                type: 'scene',
+                                text: 'Lihat Relief',
+                                sceneId: 'relief',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: 10,
+                                yaw: 270,
+                                type: 'scene',
+                                text: 'Kembali ke Stupa',
+                                sceneId: 'stupa-utama',
+                                cssClass: 'hotspot-scene'
+                            }
+                        ]
+                    }
+                }
+            },
+            prambanan: {
+                title: 'Candi Prambanan',
+                subtitle: 'Kompleks candi Hindu terbesar di Indonesia',
+                scenes: {
+                    'candi-siwa': {
+                        title: 'Candi Siwa',
+                        image: 'assets/virtual-tours/prambanan/scene-1.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Candi Siwa - Candi Utama',
+                            content: `
+                                <p><strong>Candi Siwa</strong> adalah candi tertinggi dan terbesar di kompleks Prambanan dengan ketinggian <strong>47 meter</strong>.</p>
+                                <p>Candi ini didedikasikan untuk <strong>Dewa Siwa</strong> (Sang Penghancur) dalam Trimurti Hindu.</p>
+                                <h3>Struktur Candi:</h3>
+                                <ul>
+                                    <li><strong>Ruang Utama:</strong> Berisi arca Siwa Mahadewa setinggi 3 meter</li>
+                                    <li><strong>Ruang Timur:</strong> Arca Siwa sebagai guru (Siwa Mahaguru)</li>
+                                    <li><strong>Ruang Selatan:</strong> Arca Ganesha (putra Siwa)</li>
+                                    <li><strong>Ruang Barat:</strong> Arca Durga (istri Siwa)</li>
+                                </ul>
+                                <p>Dinding candi dihiasi <strong>relief Ramayana</strong> yang menceritakan kisah Rama dan Sinta.</p>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: -5,
+                                yaw: 120,
+                                type: 'scene',
+                                text: 'Lihat Candi Brahma',
+                                sceneId: 'candi-brahma',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: 0,
+                                yaw: 0,
+                                type: 'info',
+                                text: 'Relief Ramayana mengelilingi candi',
+                                cssClass: 'hotspot-info'
+                            }
+                        ]
+                    },
+                    'candi-brahma': {
+                        title: 'Candi Brahma',
+                        image: 'assets/virtual-tours/prambanan/scene-2.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Candi Brahma - Sang Pencipta',
+                            content: `
+                                <p><strong>Candi Brahma</strong> terletak di sebelah selatan Candi Siwa dan didedikasikan untuk <strong>Dewa Brahma</strong> (Sang Pencipta).</p>
+                                <p>Tinggi candi ini mencapai <strong>33 meter</strong> dan memiliki satu ruang berisi arca Brahma berkepala empat.</p>
+                                <h3>Karakteristik:</h3>
+                                <ul>
+                                    <li>Brahma berkepala empat menghadap ke empat penjuru mata angin</li>
+                                    <li>Relief dinding melanjutkan cerita Ramayana dari Candi Siwa</li>
+                                    <li>Arsitektur mirip Candi Siwa namun lebih kecil</li>
+                                    <li>Dibangun pada abad ke-9 Masehi</li>
+                                </ul>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: 0,
+                                yaw: 90,
+                                type: 'scene',
+                                text: 'Lihat Candi Wisnu',
+                                sceneId: 'candi-wisnu',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: 5,
+                                yaw: 270,
+                                type: 'scene',
+                                text: 'Kembali ke Candi Siwa',
+                                sceneId: 'candi-siwa',
+                                cssClass: 'hotspot-scene'
+                            }
+                        ]
+                    },
+                    'candi-wisnu': {
+                        title: 'Candi Wisnu',
+                        image: 'assets/virtual-tours/prambanan/scene-3.jpg',
+                        pitch: 0,
+                        yaw: 180,
+                        info: {
+                            title: 'Candi Wisnu - Sang Pemelihara',
+                            content: `
+                                <p><strong>Candi Wisnu</strong> terletak di sebelah utara Candi Siwa dan didedikasikan untuk <strong>Dewa Wisnu</strong> (Sang Pemelihara).</p>
+                                <p>Dengan ketinggian <strong>33 meter</strong>, candi ini melengkapi <strong>Trimurti</strong> (tiga dewa utama Hindu).</p>
+                                <h3>Keunikan:</h3>
+                                <ul>
+                                    <li>Berisi arca Wisnu berkendaraan Garuda</li>
+                                    <li>Relief menceritakan kisah Krishna (avatar Wisnu)</li>
+                                    <li>Arsitektur simetris dengan Candi Brahma</li>
+                                    <li>Menghadap ke timur sesuai kepercayaan Hindu</li>
+                                </ul>
+                                <h3>Konsep Trimurti:</h3>
+                                <p>Ketiga candi (Siwa, Brahma, Wisnu) melambangkan siklus kehidupan: <strong>penciptaan (Brahma)</strong>, <strong>pemeliharaan (Wisnu)</strong>, dan <strong>penghancuran (Siwa)</strong>.</p>
+                            `
+                        },
+                        hotSpots: [
+                            {
+                                pitch: 0,
+                                yaw: 180,
+                                type: 'scene',
+                                text: 'Kembali ke Candi Siwa',
+                                sceneId: 'candi-siwa',
+                                cssClass: 'hotspot-scene'
+                            },
+                            {
+                                pitch: -10,
+                                yaw: 90,
+                                type: 'scene',
+                                text: 'Lihat Candi Brahma',
+                                sceneId: 'candi-brahma',
+                                cssClass: 'hotspot-scene'
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        // Initialize tour
+        let viewer;
+        let currentConfig = tourConfigs[templeName];
+        let currentScene = Object.keys(currentConfig.scenes)[0];
+
+        // Set title
+        document.getElementById('tour-title').textContent = currentConfig.title;
+        document.getElementById('tour-subtitle').textContent = currentConfig.subtitle;
+
+        // Generate scene buttons
+        const sceneSelector = document.getElementById('scene-selector');
+        Object.keys(currentConfig.scenes).forEach((sceneId, index) => {
+            const scene = currentConfig.scenes[sceneId];
+            const button = document.createElement('button');
+            button.className = 'scene-button' + (index === 0 ? ' active' : '');
+            button.textContent = scene.title;
+            button.onclick = () => loadScene(sceneId);
+            button.dataset.sceneId = sceneId;
+            sceneSelector.appendChild(button);
+        });
+
+        // Load initial scene
+        function initViewer() {
+            const firstSceneId = Object.keys(currentConfig.scenes)[0];
+            loadScene(firstSceneId);
+            
+            // Hide loading after 1 second
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1000);
+        }
+
+        // Load scene
+        function loadScene(sceneId) {
+            currentScene = sceneId;
+            const scene = currentConfig.scenes[sceneId];
+            
+            // Update active button
+            document.querySelectorAll('.scene-button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.sceneId === sceneId);
+            });
+            
+            // Update info panel
+            updateInfoPanel(scene.info);
+            
+            // Create hotspots
+            const hotSpots = scene.hotSpots.map(hs => {
+                if (hs.type === 'scene') {
+                    return {
+                        ...hs,
+                        clickHandlerFunc: () => loadScene(hs.sceneId)
+                    };
+                }
+                return hs;
+            });
+            
+            // Initialize or update viewer
+            if (!viewer) {
+                viewer = pannellum.viewer('panorama', {
+                    type: 'equirectangular',
+                    panorama: scene.image,
+                    autoLoad: true,
+                    pitch: scene.pitch,
+                    yaw: scene.yaw,
+                    hfov: 100,
+                    hotSpots: hotSpots,
+                    showControls: false
+                });
+            } else {
+                viewer.loadScene(sceneId, scene.pitch, scene.yaw, scene.hfov);
+            }
+        }
+
+        // Update info panel
+        function updateInfoPanel(info) {
+            document.getElementById('info-title').textContent = info.title;
+            document.getElementById('info-content').innerHTML = info.content;
+        }
+
+        // Toggle info panel
+        function toggleInfo() {
+            document.getElementById('info-panel').classList.toggle('hidden');
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Go back
+        function goBack() {
+            window.location.href = 'ar-viewer.html';
+        }
+
+        // Initialize on load
+        window.addEventListener('load', initViewer);
+    </script>
+</body>
+</html>
