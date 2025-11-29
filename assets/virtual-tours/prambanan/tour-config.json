@@ -1,0 +1,120 @@
+{
+  "default": {
+    "firstScene": "siwa",
+    "author": "AR Sejarah Indonesia",
+    "sceneFadeDuration": 1000,
+    "autoLoad": true
+  },
+
+  "scenes": {
+    "siwa": {
+      "title": "Candi Siwa - Prambanan",
+      "hfov": 110,
+      "pitch": 0,
+      "yaw": 0,
+      "type": "equirectangular",
+      "panorama": "scene-1.jpg",
+      "hotSpots": [
+        {
+          "pitch": -12,
+          "yaw": 90,
+          "type": "scene",
+          "text": "Ke Candi Brahma",
+          "sceneId": "brahma"
+        },
+        {
+          "pitch": -12,
+          "yaw": -90,
+          "type": "scene",
+          "text": "Ke Candi Wisnu",
+          "sceneId": "wisnu"
+        },
+        {
+          "pitch": 0,
+          "yaw": 0,
+          "type": "info",
+          "text": "Tentang Candi Siwa",
+          "description": "Candi Siwa adalah candi utama dan tertinggi di kompleks Prambanan dengan tinggi 47 meter. Candi ini didedikasikan untuk Dewa Siwa sebagai Dewa Pemusnah dalam Trimurti Hindu."
+        }
+      ]
+    },
+
+    "brahma": {
+      "title": "Candi Brahma - Prambanan",
+      "hfov": 110,
+      "pitch": -5,
+      "yaw": 180,
+      "type": "equirectangular",
+      "panorama": "scene-2.jpg",
+      "hotSpots": [
+        {
+          "pitch": -10,
+          "yaw": 0,
+          "type": "scene",
+          "text": "Kembali ke Candi Siwa",
+          "sceneId": "siwa"
+        },
+        {
+          "pitch": -15,
+          "yaw": 150,
+          "type": "scene",
+          "text": "Ke Candi Wisnu",
+          "sceneId": "wisnu"
+        },
+        {
+          "pitch": 5,
+          "yaw": 90,
+          "type": "info",
+          "text": "Tentang Candi Brahma",
+          "description": "Candi Brahma terletak di sebelah selatan Candi Siwa dan didedikasikan untuk Dewa Brahma sebagai Dewa Pencipta. Relief di dinding candi menceritakan kisah Ramayana."
+        }
+      ]
+    },
+
+    "wisnu": {
+      "title": "Candi Wisnu - Prambanan",
+      "hfov": 110,
+      "pitch": 0,
+      "yaw": 90,
+      "type": "equirectangular",
+      "panorama": "scene-3.jpg",
+      "hotSpots": [
+        {
+          "pitch": -8,
+          "yaw": 270,
+          "type": "scene",
+          "text": "Kembali ke Candi Siwa",
+          "sceneId": "siwa"
+        },
+        {
+          "pitch": -12,
+          "yaw": 180,
+          "type": "scene",
+          "text": "Ke Candi Brahma",
+          "sceneId": "brahma"
+        },
+        {
+          "pitch": 3,
+          "yaw": 45,
+          "type": "info",
+          "text": "Tentang Candi Wisnu",
+          "description": "Candi Wisnu terletak di sebelah utara Candi Siwa dan didedikasikan untuk Dewa Wisnu sebagai Dewa Pemelihara. Kompleks Prambanan dibangun pada abad ke-9 Masehi."
+        }
+      ]
+    }
+  }
+}
+```
+
+---
+
+## 🎨 **Cara Menentukan Posisi Hotspot (pitch & yaw)**
+
+### **Koordinat System:**
+```
+       Pitch (Vertikal)
+            90° (atas)
+             |
+    -180° ---|--- 0° / 180°  (Yaw/Horizontal)
+             |
+           -90° (bawah)
