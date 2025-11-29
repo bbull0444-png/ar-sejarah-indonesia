@@ -1,0 +1,106 @@
+{
+  "default": {
+    "firstScene": "stupa",
+    "author": "AR Sejarah Indonesia",
+    "sceneFadeDuration": 1000,
+    "autoLoad": true
+  },
+
+  "scenes": {
+    "stupa": {
+      "title": "Stupa Utama Borobudur",
+      "hfov": 110,
+      "pitch": -5,
+      "yaw": 0,
+      "type": "equirectangular",
+      "panorama": "scene-1.jpg",
+      "hotSpots": [
+        {
+          "pitch": -15,
+          "yaw": 90,
+          "type": "scene",
+          "text": "Ke Lorong Relief",
+          "sceneId": "relief"
+        },
+        {
+          "pitch": -20,
+          "yaw": -90,
+          "type": "scene",
+          "text": "Ke Pemandangan Atas",
+          "sceneId": "view"
+        },
+        {
+          "pitch": 0,
+          "yaw": 0,
+          "type": "info",
+          "text": "Tentang Stupa Utama",
+          "description": "Stupa utama Borobudur memiliki diameter 9.9 meter dan tinggi 42 meter dari permukaan tanah. Stupa ini melambangkan kesempurnaan pencerahan Buddha."
+        }
+      ]
+    },
+
+    "relief": {
+      "title": "Lorong Relief Borobudur",
+      "hfov": 110,
+      "pitch": 0,
+      "yaw": 180,
+      "type": "equirectangular",
+      "panorama": "scene-2.jpg",
+      "hotSpots": [
+        {
+          "pitch": -10,
+          "yaw": 0,
+          "type": "scene",
+          "text": "Kembali ke Stupa",
+          "sceneId": "stupa"
+        },
+        {
+          "pitch": -15,
+          "yaw": 120,
+          "type": "scene",
+          "text": "Ke Pemandangan Atas",
+          "sceneId": "view"
+        },
+        {
+          "pitch": 5,
+          "yaw": 90,
+          "type": "info",
+          "text": "Relief Borobudur",
+          "description": "Borobudur memiliki 2.672 panel relief yang menceritakan kisah perjalanan spiritual menuju pencerahan. Relief ini merupakan karya seni Buddha terbesar di dunia."
+        }
+      ]
+    },
+
+    "view": {
+      "title": "Pemandangan dari Atas Borobudur",
+      "hfov": 110,
+      "pitch": -10,
+      "yaw": 270,
+      "type": "equirectangular",
+      "panorama": "scene-3.jpg",
+      "hotSpots": [
+        {
+          "pitch": -5,
+          "yaw": 180,
+          "type": "scene",
+          "text": "Kembali ke Stupa",
+          "sceneId": "stupa"
+        },
+        {
+          "pitch": -8,
+          "yaw": 45,
+          "type": "scene",
+          "text": "Ke Lorong Relief",
+          "sceneId": "relief"
+        },
+        {
+          "pitch": -20,
+          "yaw": 90,
+          "type": "info",
+          "text": "Lokasi Borobudur",
+          "description": "Borobudur dibangun pada abad ke-9 Masehi di dataran tinggi Kedu, Magelang. Candi ini menghadap empat arah mata angin dan dikelilingi oleh gunung berapi."
+        }
+      ]
+    }
+  }
+}
