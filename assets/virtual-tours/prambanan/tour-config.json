@@ -9,7 +9,7 @@
     "candi-siwa": {
       "title": "Candi Siwa",
       "type": "equirectangular",
-      "panorama": "scene-1.jpg",
+      "panorama": "https://bbull0444-png.github.io/ar-sejarah-indonesia/assets/virtual-tours/prambanan/scene-1.jpg",
       "pitch": 0,
       "yaw": 180,
       "hfov": 100,
@@ -48,7 +48,7 @@
     "candi-brahma": {
       "title": "Candi Brahma",
       "type": "equirectangular",
-      "panorama": "scene-2.jpg",
+      "panorama": "https://bbull0444-png.github.io/ar-sejarah-indonesia/assets/virtual-tours/prambanan/scene-2.jpg",
       "pitch": 0,
       "yaw": 180,
       "hfov": 100,
@@ -87,7 +87,7 @@
     "candi-wisnu": {
       "title": "Candi Wisnu",
       "type": "equirectangular",
-      "panorama": "scene-3.jpg",
+      "panorama": "https://bbull0444-png.github.io/ar-sejarah-indonesia/assets/virtual-tours/prambanan/scene-3.jpg",
       "pitch": 0,
       "yaw": 180,
       "hfov": 100,
