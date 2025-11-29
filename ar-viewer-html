@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Viewer - Sejarah Indonesia</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>AR Scanner - Sejarah Indonesia</title>
     
     <!-- A-Frame & AR.js -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="src/css/ar-view.css">
     
     <style>
         * {
@@ -25,39 +23,334 @@
             background: #000;
         }
 
-        /* Info Overlay */
-        #info-overlay {
+        /* Prevent body scroll when modal open */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* AR Scene Container */
+        #ar-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        a-scene {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-back:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .top-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-help {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-help:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Bottom Instruction */
+        .bottom-instruction {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+            padding: 30px 20px 20px;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .instruction-text {
+            color: white;
+            font-size: 14px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .scan-icon {
+            width: 24px;
+            height: 24px;
+            border: 2px solid white;
+            border-radius: 4px;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .scan-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -20%;
+            right: -20%;
+            height: 2px;
+            background: white;
+            animation: scanLine 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes scanLine {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Marker Info Overlay */
+        #marker-info-overlay {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        #marker-info-overlay.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .marker-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .marker-era {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .btn-detail {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Error Container */
+        #error-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2500;
+            padding: 20px;
+        }
+
+        .error-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            color: #ff6b6b;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        .btn-retry {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-retry:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modal Base Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
             display: none;
             align-items: center;
             justify-content: center;
+            z-index: 2000;
             padding: 20px;
-            overflow-y: auto;
         }
 
-        #info-overlay.show {
+        .modal.active {
             display: flex;
         }
 
-        #info-content {
+        .modal-content {
             background: white;
             border-radius: 20px;
-            padding: 30px;
-            max-width: 800px;
+            max-width: 500px;
             width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.4s ease;
+            max-height: 80vh;
+            overflow: hidden;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
         }
 
-        @keyframes slideUp {
+        @keyframes modalSlideIn {
             from {
                 opacity: 0;
                 transform: translateY(50px);
@@ -68,510 +361,371 @@
             }
         }
 
-        #info-content h1 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 15px;
-        }
-
-        #info-content h2 {
-            color: #764ba2;
-            margin-top: 25px;
-            margin-bottom: 12px;
-            font-size: 20px;
-        }
-
-        #info-content p,
-        #info-content li {
-            color: #333;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            font-size: 15px;
-        }
-
-        #info-content ul {
-            margin-left: 25px;
-            margin-bottom: 20px;
-        }
-
-        #info-content li {
-            margin-bottom: 10px;
-        }
-
-        #info-content strong {
-            color: #667eea;
-        }
-
-        #info-content em {
-            background: #fff3cd;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-style: normal;
-        }
-
-        #close-info {
-            display: block;
-            margin: 30px auto 0;
-            padding: 15px 50px;
+        .modal-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            padding: 20px;
+            position: relative;
         }
 
-        #close-info:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        /* Instructions Bar */
-        #instructions {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(102, 126, 234, 0.95);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 50px;
-            z-index: 998;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            max-width: 90%;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        /* Loading Indicator */
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            padding: 30px 50px;
-            border-radius: 15px;
-            z-index: 997;
-            text-align: center;
-            font-size: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Back Button */
-        #back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        #back-button:hover {
-            background: white;
-            transform: translateX(-5px);
-        }
-
-        /* Virtual Tour Button */
-        .tour-button {
+        .btn-close {
             position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.3);
             border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
-            transition: all 0.3s ease;
-            z-index: 10;
-            display: none;
-        }
-
-        .tour-button.show {
-            display: block;
-            animation: bounceIn 0.6s ease;
-        }
-
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.3);
-            }
-            50% {
-                opacity: 1;
-                transform: translateX(-50%) scale(1.05);
-            }
-            100% {
-                transform: translateX(-50%) scale(1);
-            }
-        }
-
-        .tour-button:hover {
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
-        }
-
-        /* Marker Detection Badge */
-        #marker-status {
-            position: fixed;
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(40, 167, 69, 0.95);
             color: white;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 998;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
 
-        #marker-status.detected {
-            display: block;
-            animation: fadeIn 0.3s ease;
+        .btn-close:hover {
+            background: white;
+            color: #667eea;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .modal-title {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-right: 40px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            #info-content {
-                padding: 20px;
-                max-height: 80vh;
-            }
-
-            #info-content h1 {
-                font-size: 22px;
-            }
-
-            #info-content h2 {
-                font-size: 18px;
-            }
-
-            #info-content p,
-            #info-content li {
-                font-size: 14px;
-            }
-
-            #instructions {
-                font-size: 12px;
-                padding: 12px 20px;
-            }
-
-            #back-button {
-                padding: 10px 20px;
-                font-size: 13px;
-            }
+        .modal-era {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 5px;
         }
 
-        /* Scrollbar Styling */
-        #info-content::-webkit-scrollbar {
-            width: 8px;
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
         }
 
-        #info-content::-webkit-scrollbar-track {
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
             background: #f1f1f1;
-            border-radius: 10px;
         }
 
-        #info-content::-webkit-scrollbar-thumb {
+        .modal-body::-webkit-scrollbar-thumb {
             background: #667eea;
             border-radius: 10px;
         }
 
-        #info-content::-webkit-scrollbar-thumb:hover {
-            background: #764ba2;
+        .modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-description {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .modal-description .bullet {
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .btn-expand {
+            background: #f5f5f5;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-expand:hover {
+            background: #e0e0e0;
+        }
+
+        /* Virtual Tour Modal Specific */
+        .modal-location,
+        .modal-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-start-tour {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-start-tour:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-title {
+                font-size: 16px;
+            }
+
+            .btn-back,
+            .btn-help {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+                border-radius: 15px;
+            }
+
+            .modal-title {
+                font-size: 20px;
+            }
+
+            .instruction-text {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Back Button -->
-    <button id="back-button" onclick="window.location.href='index.html'">
-        ← Kembali
-    </button>
-
-    <!-- Instructions -->
-    <div id="instructions">
-        📷 Arahkan kamera ke barcode marker (0-9)
-    </div>
-
-    <!-- Marker Status -->
-    <div id="marker-status">
-        ✓ Marker Terdeteksi
-    </div>
-
-    <!-- Loading Indicator -->
-    <div class="loading" id="loading">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
         <div class="loading-spinner"></div>
-        <div>Memuat AR...</div>
+        <div class="loading-text">Memuat AR Scanner...</div>
+        <div class="loading-subtext">Mohon tunggu sebentar</div>
     </div>
 
-    <!-- Info Overlay -->
-    <div id="info-overlay">
-        <div id="info-content"></div>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <button class="btn-back" onclick="window.location.href='index.html'">
+            ← Kembali
+        </button>
+        <div class="top-title">AR Sejarah Indonesia</div>
+        <button class="btn-help" onclick="showHelp()">?</button>
     </div>
 
-    <!-- A-Frame AR Scene -->
-    <a-scene 
-        embedded 
-        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;" 
-        vr-mode-ui="enabled: false"
-        renderer="logarithmicDepthBuffer: true; precision: medium;">
-        
-        <a-entity camera></a-entity>
+    <!-- AR Container -->
+    <div id="ar-container">
+        <a-scene
+            embedded
+            arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+            vr-mode-ui="enabled: false"
+            renderer="logarithmicDepthBuffer: true; precision: medium;">
+            
+            <!-- Marker 0: Prasasti Ciaruteun -->
+            <a-marker type="barcode" value="0">
+                <!-- Image akan di-inject oleh ar-handler.js -->
+            </a-marker>
 
-        <!-- Barcode 0: Borobudur (Virtual Tour) -->
-        <a-marker type="barcode" value="0" id="marker-0">
-            <a-entity position="0 0.5 0" rotation="-90 0 0">
-                <a-image 
-                    src="assets/images/temples/borobudur-thumb.jpg" 
-                    width="1.2" 
-                    height="0.8" 
-                    transparent="true"
-                    shader="flat">
-                </a-image>
-                <a-text 
-                    value="TAP UNTUK\nVIRTUAL TOUR" 
-                    align="center" 
-                    width="1.5" 
-                    color="#FFD700"
-                    position="0 -0.6 0.01">
-                </a-text>
-                <a-text 
-                    value="▶" 
-                    align="center" 
-                    width="0.8" 
-                    color="#FFD700"
-                    position="0 0 0.02"
-                    animation="property: scale; to: 1.3 1.3 1.3; dir: alternate; loop: true; dur: 800">
-                </a-text>
-            </a-entity>
-            <button class="tour-button" onclick="openVirtualTour('borobudur')">
-                🏛️ Mulai Virtual Tour Borobudur
-            </button>
-        </a-marker>
+            <!-- Marker 1: Kapak Genggam -->
+            <a-marker type="barcode" value="1">
+            </a-marker>
 
-        <!-- Barcode 1: Prasasti Ciaruteun -->
-        <a-marker type="barcode" value="1" id="marker-1">
-            <a-image 
-                src="assets/images/artifacts/prasasti-ciaruteun.png" 
-                width="0.8" 
-                height="1.2" 
-                position="0 0.6 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat"
-                animation="property: rotation; to: -90 360 0; loop: true; dur: 20000; easing: linear">
-            </a-image>
-        </a-marker>
+            <!-- Marker 2: Kapak Lonjong -->
+            <a-marker type="barcode" value="2">
+            </a-marker>
 
-        <!-- Barcode 2: Dolmen -->
-        <a-marker type="barcode" value="2" id="marker-2">
-            <a-image 
-                src="assets/images/structures/dolmen.png" 
-                width="1.0" 
-                height="0.7" 
-                position="0 0.5 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat">
-            </a-image>
-        </a-marker>
+            <!-- Marker 3: Homo Erectus -->
+            <a-marker type="barcode" value="3">
+            </a-marker>
 
-        <!-- Barcode 3: Kapak Genggam -->
-        <a-marker type="barcode" value="3" id="marker-3">
-            <a-image 
-                src="assets/images/artifacts/kapak-genggam.png" 
-                width="0.9" 
-                height="0.6" 
-                position="0 0.4 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat"
-                animation="property: position; to: 0 0.5 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine">
-            </a-image>
-        </a-marker>
+            <!-- Marker 4: Meganthropus -->
+            <a-marker type="barcode" value="4">
+            </a-marker>
 
-        <!-- Barcode 4: Kjokkenmoddinger -->
-        <a-marker type="barcode" value="4" id="marker-4">
-            <a-image 
-                src="assets/images/structures/kjokkenmoddinger.png" 
-                width="1.0" 
-                height="0.8" 
-                position="0 0.5 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat">
-            </a-image>
-        </a-marker>
+            <!-- Marker 5: Dolmen -->
+            <a-marker type="barcode" value="5">
+            </a-marker>
 
-        <!-- Barcode 5: Menhir -->
-        <a-marker type="barcode" value="5" id="marker-5">
-            <a-image 
-                src="assets/images/structures/menhir.png" 
-                width="0.5" 
-                height="1.5" 
-                position="0 0.8 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat">
-            </a-image>
-        </a-marker>
+            <!-- Marker 6: Kjokkenmoddinger -->
+            <a-marker type="barcode" value="6">
+            </a-marker>
 
-        <!-- Barcode 6: Prambanan (Virtual Tour) -->
-        <a-marker type="barcode" value="6" id="marker-6">
-            <a-entity position="0 0.5 0" rotation="-90 0 0">
-                <a-image 
-                    src="assets/images/temples/prambanan-thumb.jpg" 
-                    width="1.2" 
-                    height="0.8" 
-                    transparent="true"
-                    shader="flat">
-                </a-image>
-                <a-text 
-                    value="TAP UNTUK\nVIRTUAL TOUR" 
-                    align="center" 
-                    width="1.5" 
-                    color="#FFD700"
-                    position="0 -0.6 0.01">
-                </a-text>
-                <a-text 
-                    value="▶" 
-                    align="center" 
-                    width="0.8" 
-                    color="#FFD700"
-                    position="0 0 0.02"
-                    animation="property: scale; to: 1.3 1.3 1.3; dir: alternate; loop: true; dur: 800">
-                </a-text>
-            </a-entity>
-            <button class="tour-button" onclick="openVirtualTour('prambanan')">
-                🛕 Mulai Virtual Tour Prambanan
-            </button>
-        </a-marker>
+            <!-- Marker 7: Menhir -->
+            <a-marker type="barcode" value="7">
+            </a-marker>
 
-        <!-- Barcode 7: Kapak Lonjong -->
-        <a-marker type="barcode" value="7" id="marker-7">
-            <a-image 
-                src="assets/images/artifacts/kapak-lonjong.png" 
-                width="0.9" 
-                height="0.6" 
-                position="0 0.4 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat"
-                animation="property: position; to: 0 0.5 0; dir: alternate; loop: true; dur: 2000; easing: easeInOutSine">
-            </a-image>
-        </a-marker>
+            <!-- Marker 8: Borobudur -->
+            <a-marker type="barcode" value="8">
+            </a-marker>
 
-        <!-- Barcode 8: Meganthropus -->
-        <a-marker type="barcode" value="8" id="marker-8">
-            <a-image 
-                src="assets/images/fossils/meganthropus.png" 
-                width="0.6" 
-                height="1.2" 
-                position="0 0.6 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat">
-            </a-image>
-        </a-marker>
+            <!-- Marker 9: Prambanan -->
+            <a-marker type="barcode" value="9">
+            </a-marker>
 
-        <!-- Barcode 9: Homo Erectus -->
-        <a-marker type="barcode" value="9" id="marker-9">
-            <a-image 
-                src="assets/images/fossils/homo-erectus.png" 
-                width="0.6" 
-                height="1.2" 
-                position="0 0.6 0"
-                rotation="-90 0 0"
-                transparent="true"
-                shader="flat">
-            </a-image>
-        </a-marker>
+            <!-- Camera -->
+            <a-entity camera></a-entity>
+        </a-scene>
+    </div>
 
-    </a-scene>
+    <!-- Bottom Instruction -->
+    <div class="bottom-instruction">
+        <div class="instruction-text">
+            <div class="scan-icon"></div>
+            <span>Arahkan kamera ke marker barcode 0-9</span>
+        </div>
+    </div>
 
-    <!-- JavaScript -->
+    <!-- Marker Info Overlay -->
+    <div id="marker-info-overlay">
+        <h3 class="marker-title">Nama Objek</h3>
+        <span class="marker-era">Era/Periode</span>
+        <button class="btn-detail">📖 Lihat Detail</button>
+    </div>
+
+    <!-- Error Container -->
+    <div id="error-container">
+        <div class="error-icon">⚠️</div>
+        <h2 class="error-title">Terjadi Kesalahan</h2>
+        <p class="error-message">Pesan error akan muncul di sini</p>
+        <button class="btn-retry" onclick="location.reload()">Coba Lagi</button>
+    </div>
+
+    <!-- Info Modal (untuk artifact/fossil/structure) -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="btn-close" onclick="closeModal()">×</button>
+                <h2 class="modal-title">Nama Objek</h2>
+                <span class="modal-era">Era/Periode</span>
+            </div>
+            <div class="modal-body">
+                <img src="" alt="" class="modal-image">
+                <div class="modal-description">
+                    Deskripsi objek akan muncul di sini...
+                </div>
+                <button class="btn-expand">▼ Selengkapnya</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Virtual Tour Modal (untuk Borobudur/Prambanan) -->
+    <div id="virtual-tour-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="btn-close" onclick="closeModal()">×</button>
+                <h2 class="modal-title">Nama Candi</h2>
+                <span class="modal-era">Era/Periode</span>
+            </div>
+            <div class="modal-body">
+                <p class="modal-location">📍 Lokasi</p>
+                <p class="modal-description">
+                    Deskripsi singkat tentang candi...
+                </p>
+                <button class="btn-start-tour">🎥 Mulai Virtual Tour</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript -->
+    <script src="src/js/utils.js"></script>
+    <script src="src/js/info-modals.js"></script>
     <script src="src/js/ar-handler.js"></script>
-    <script src="src/js/info-modal.js"></script>
-    
+
     <script>
-        // Virtual Tour Handler
-        function openVirtualTour(temple) {
-            window.location.href = `virtual-tour.html?temple=${temple}`;
+        // Show help modal
+        function showHelp() {
+            const helpText = `
+Cara Menggunakan AR Scanner:
+
+1. Pastikan kamera HP sudah diizinkan
+2. Arahkan kamera ke marker barcode (0-9)
+3. Tunggu hingga objek muncul
+4. Klik "Lihat Detail" untuk info lengkap
+
+Tips:
+• Pastikan pencahayaan cukup
+• Jaga jarak 15-30 cm dari marker
+• Marker harus terlihat jelas oleh kamera
+            `;
+            
+            if (window.utils && window.utils.showToast) {
+                window.utils.showToast(helpText, 'info', 8000);
+            } else {
+                alert(helpText);
+            }
         }
 
-        // Show tour button when temple marker detected
-        const markerBorobudur = document.querySelector('#marker-0');
-        const markerPrambanan = document.querySelector('#marker-6');
-        
-        if (markerBorobudur) {
-            markerBorobudur.addEventListener('markerFound', function() {
-                const btn = this.querySelector('.tour-button');
-                if (btn) btn.classList.add('show');
-            });
-            
-            markerBorobudur.addEventListener('markerLost', function() {
-                const btn = this.querySelector('.tour-button');
-                if (btn) btn.classList.remove('show');
-            });
+        // Check browser support
+        function checkBrowserSupport() {
+            if (window.utils) {
+                if (!window.utils.isWebGLSupported()) {
+                    showError('Browser Anda tidak mendukung WebGL. Silakan gunakan browser modern seperti Chrome atau Firefox.');
+                    return false;
+                }
+
+                if (!window.utils.isCameraSupported()) {
+                    showError('Browser Anda tidak mendukung akses kamera. Pastikan Anda menggunakan HTTPS atau localhost.');
+                    return false;
+                }
+            }
+            return true;
         }
 
-        if (markerPrambanan) {
-            markerPrambanan.addEventListener('markerFound', function() {
-                const btn = this.querySelector('.tour-button');
-                if (btn) btn.classList.add('show');
-            });
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('AR Viewer page loaded');
             
-            markerPrambanan.addEventListener('markerLost', function() {
-                const btn = this.querySelector('.tour-button');
-                if (btn) btn.classList.remove('show');
-            });
-        }
+            // Check browser support
+            if (!checkBrowserSupport()) {
+                return;
+            }
+
+            // Initialize AR Handler
+            if (typeof initARHandler === 'function') {
+                initARHandler();
+            } else {
+                console.error('initARHandler function not found');
+                showError('Gagal memuat AR Handler. Silakan refresh halaman.');
+            }
+        });
+
+        // Handle page visibility change (pause/resume AR)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('Page hidden - AR paused');
+            } else {
+                console.log('Page visible - AR resumed');
+            }
+        });
     </script>
 </body>
 </html>
