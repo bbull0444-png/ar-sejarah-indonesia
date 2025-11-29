@@ -1,0 +1,533 @@
+/**
+ * AR View CSS - Styles khusus untuk AR Scanner
+ * Camera overlay, marker info, AR-specific UI
+ */
+
+/* ========================================
+   AR Scene Container
+   ======================================== */
+
+#ar-scene-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000;
+}
+
+a-scene {
+  width: 100%;
+  height: 100%;
+}
+
+/* Hide A-Frame default UI */
+.a-enter-vr-button,
+.a-orientation-modal {
+  display: none !important;
+}
+
+/* ========================================
+   Camera Overlay UI
+   ======================================== */
+
+.camera-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Top Bar */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.back-button {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.ar-title {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* ========================================
+   Marker Detection Guide
+   ======================================== */
+
+.marker-guide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 280px;
+  border: 3px dashed rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  pointer-events: none;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.marker-guide::before {
+  content: '📷';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+}
+
+.guide-text {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   Marker Info Overlay
+   ======================================== */
+
+#marker-info-overlay {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  color: white;
+  padding: 1.25rem 1.5rem;
+  border-radius: 16px;
+  max-width: 90%;
+  width: 400px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+#marker-info-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+  animation: slideUpFade 0.4s ease-out;
+}
+
+.marker-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.marker-era {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.35rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.btn-detail {
+  background-color: white;
+  color: #667eea;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.btn-detail:hover {
+  background-color: #667eea;
+  color: white;
+  transform: scale(1.02);
+}
+
+@keyframes slideUpFade {
+  from {
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   Bottom Instructions
+   ======================================== */
+
+.bottom-instructions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  padding: 1.5rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.instruction-text {
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  margin-bottom: 0.5rem;
+}
+
+.instruction-subtext {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* ========================================
+   AR Loading State
+   ======================================== */
+
+#ar-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  color: white;
+}
+
+#ar-loading.hidden {
+  display: none;
+}
+
+.ar-loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+.ar-loading-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.ar-loading-subtext {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ========================================
+   AR Error State
+   ======================================== */
+
+.ar-error {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+  z-index: 10000;
+}
+
+.ar-error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.ar-error-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.ar-error-message {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.ar-error-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* ========================================
+   Corner Indicators (untuk marker frame)
+   ======================================== */
+
+.corner-indicators {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  height: 260px;
+  pointer-events: none;
+}
+
+.corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #10b981;
+}
+
+.corner-tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.corner.active {
+  border-color: #10b981;
+  animation: cornerPulse 0.5s ease-out;
+}
+
+@keyframes cornerPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ========================================
+   Scan Success Animation
+   ======================================== */
+
+.scan-success {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(16, 185, 129, 0.95);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+  animation: scanSuccess 0.6s ease-out;
+  pointer-events: none;
+  z-index: 9998;
+  display: none;
+}
+
+.scan-success.show {
+  display: block;
+}
+
+@keyframes scanSuccess {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0.75rem;
+  }
+  
+  .ar-title {
+    font-size: 1rem;
+  }
+  
+  .marker-guide {
+    width: 220px;
+    height: 220px;
+  }
+  
+  #marker-info-overlay {
+    width: 90%;
+    bottom: 80px;
+    padding: 1rem;
+  }
+  
+  .marker-title {
+    font-size: 1.125rem;
+  }
+  
+  .bottom-instructions {
+    padding: 1rem;
+  }
+  
+  .instruction-text {
+    font-size: 0.85rem;
+  }
+  
+  .instruction-subtext {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .marker-guide {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .guide-text {
+    font-size: 0.85rem;
+    bottom: -50px;
+  }
+  
+  #marker-info-overlay {
+    padding: 0.75rem 1rem;
+  }
+  
+  .back-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ========================================
+   Landscape Mode Warning
+   ======================================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .landscape-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .landscape-warning-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .landscape-warning-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .landscape-warning-subtext {
+    font-size: 0.95rem;
+    opacity: 0.8;
+  }
+}
