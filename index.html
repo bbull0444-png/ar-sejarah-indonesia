@@ -3,332 +3,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Sejarah Indonesia</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <meta name="description" content="Aplikasi AR interaktif untuk belajar sejarah Indonesia">
+    <meta name="keywords" content="AR, Sejarah Indonesia, Augmented Reality, Edukasi">
+    <meta name="author" content="AR Sejarah Indonesia">
+    <title>AR Sejarah Indonesia - Belajar Sejarah dengan AR</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="src/css/main.css">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
-
-        #info-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        #info-overlay.show {
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header p {
+            font-size: 18px;
+            font-weight: 300;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease 0.4s both;
+        }
+
+        .hero-content {
             display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
-        #info-content {
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .hero-text p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* CTA Button */
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
             background: white;
             border-radius: 15px;
             padding: 30px;
-            max-width: 800px;
-            max-height: 70vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease;
         }
-        
-        #info-content h1 {
-            color: #8B4513;
+
+        .feature-card:nth-child(1) { animation-delay: 0.5s; }
+        .feature-card:nth-child(2) { animation-delay: 0.6s; }
+        .feature-card:nth-child(3) { animation-delay: 0.7s; }
+        .feature-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 50px;
             margin-bottom: 20px;
-            font-size: 28px;
-            text-align: center;
         }
-        
-        #info-content h2 {
-            color: #A0522D;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-        
-        #info-content p, #info-content li {
-            color: #333;
-            line-height: 1.8;
+
+        .feature-card h3 {
+            color: #667eea;
+            font-size: 22px;
             margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
             font-size: 15px;
         }
-        
-        #info-content ul {
-            margin-left: 20px;
+
+        /* Objects Grid */
+        .objects-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease 0.9s both;
         }
 
-        #close-info {
-            display: block;
-            margin: 25px auto 0;
-            padding: 12px 40px;
-            background: #8B4513;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        
-        #close-info:hover {
-            background: #A0522D;
-        }
-
-        #instructions {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(139,69,19,0.9);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 30px;
-            z-index: 998;
+        .objects-section h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 30px;
             text-align: center;
-            font-size: 14px;
-            max-width: 90%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .loading {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%,-50%);
+        .objects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .object-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .object-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .object-item .emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .object-item h4 {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .object-item .barcode {
+            display: inline-block;
+            background: #667eea;
             color: white;
-            font-size: 18px;
-            z-index: 997;
-            background: rgba(0,0,0,0.7);
-            padding: 20px 40px;
-            border-radius: 10px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
         }
 
+        /* Instructions */
+        .instructions {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease 1s both;
+        }
+
+        .instructions h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            line-height: 60px;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .footer p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            #info-content { padding: 20px; }
-            #info-content h1 { font-size: 22px; }
-            #info-content h2 { font-size: 18px; }
-            #info-content p, #info-content li { font-size: 14px; }
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header p {
+                font-size: 16px;
+            }
+
+            .hero-content {
+                flex-direction: column;
+            }
+
+            .hero-text h2 {
+                font-size: 24px;
+            }
+
+            .objects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="info-overlay">
-        <div id="info-content"></div>
+    <!-- Header -->
+    <div class="header">
+        <h1>🏛️ AR Sejarah Indonesia</h1>
+        <p>Belajar sejarah Indonesia dengan teknologi Augmented Reality</p>
     </div>
-    
-    <div id="instructions">📷 Arahkan kamera ke barcode marker (0-9)</div>
-    <div class="loading" id="loading">Memuat AR...</div>
 
-    <a-scene 
-        embedded 
-        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;" 
-        vr-mode-ui="enabled: false">
-        
-        <a-entity camera></a-entity>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2>Jelajahi Sejarah Indonesia dengan AR</h2>
+                    <p>
+                        Aplikasi AR interaktif yang memungkinkan Anda melihat artefak sejarah Indonesia 
+                        dalam bentuk 3D menggunakan teknologi Augmented Reality. Cukup scan marker dengan 
+                        kamera smartphone, dan objek sejarah akan muncul di hadapan Anda!
+                    </p>
+                    <a href="ar-viewer.html" class="btn-primary">🚀 Mulai AR Experience</a>
+                </div>
+                <div class="hero-image">
+                    <img src="docs/screenshots/demo-1.jpg" alt="AR Demo" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22400%22 height=%22300%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2220%22 dy=%22.3em%22%3EAR Demo%3C/text%3E%3C/svg%3E'">
+                </div>
+            </div>
+        </section>
 
-        <!-- Barcode 0: Borobudur (OK - Original) -->
-        <a-marker type="barcode" value="0">
-            <a-entity 
-                gltf-model="url(Borobudur.glb)" 
-                scale="1 1 1" 
-                position="0 0.5 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
+        <!-- Features -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Friendly</h3>
+                <p>Tidak perlu install aplikasi. Cukup buka browser di smartphone dan mulai AR experience.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>10 Objek Sejarah</h3>
+                <p>Dari artefak prasejarah hingga candi megah dengan virtual tour 360°.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Edukatif</h3>
+                <p>Setiap objek dilengkapi informasi historis lengkap dan akurat.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Loading Cepat</h3>
+                <p>Teknologi PNG dan optimasi membuat loading super cepat.</p>
+            </div>
+        </section>
 
-        <!-- Barcode 1: Prasasti Ciaruteun (TEMP - Pakai Arca Buddha) -->
-        <a-marker type="barcode" value="1">
-            <a-entity 
-                gltf-model="url(models/arca-buddha.glb)" 
-                scale="0.5 0.5 0.5" 
-                position="0 0.3 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
+        <!-- Objects List -->
+        <section class="objects-section">
+            <h2>📜 Daftar Objek Sejarah</h2>
+            <div class="objects-grid">
+                <div class="object-item">
+                    <div class="emoji">🏛️</div>
+                    <h4>Candi Borobudur</h4>
+                    <span class="barcode">Barcode 0</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">📜</div>
+                    <h4>Prasasti Ciaruteun</h4>
+                    <span class="barcode">Barcode 1</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🪨</div>
+                    <h4>Dolmen</h4>
+                    <span class="barcode">Barcode 2</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🪓</div>
+                    <h4>Kapak Genggam</h4>
+                    <span class="barcode">Barcode 3</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🐚</div>
+                    <h4>Kjokkenmoddinger</h4>
+                    <span class="barcode">Barcode 4</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🗿</div>
+                    <h4>Menhir</h4>
+                    <span class="barcode">Barcode 5</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🛕</div>
+                    <h4>Candi Prambanan</h4>
+                    <span class="barcode">Barcode 6</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🪨</div>
+                    <h4>Kapak Lonjong</h4>
+                    <span class="barcode">Barcode 7</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🦴</div>
+                    <h4>Meganthropus</h4>
+                    <span class="barcode">Barcode 8</span>
+                </div>
+                <div class="object-item">
+                    <div class="emoji">🚶</div>
+                    <h4>Homo Erectus</h4>
+                    <span class="barcode">Barcode 9</span>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="assets/markers/all-markers.pdf" class="btn-primary" download>
+                    📥 Download Semua Marker
+                </a>
+            </div>
+        </section>
 
-        <!-- Barcode 2: Dolmen (TEMP - Pakai Brahma) -->
-        <a-marker type="barcode" value="2">
-            <a-entity 
-                gltf-model="url(models/brahma.glb)" 
-                scale="0.8 0.8 0.8" 
-                position="0 0.4 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
+        <!-- Instructions -->
+        <section class="instructions">
+            <h2>🎯 Cara Menggunakan</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Download Marker</h3>
+                    <p>Download dan print barcode marker (0-9) dari link di atas.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Buka AR Viewer</h3>
+                    <p>Klik tombol "Mulai AR Experience" dan izinkan akses kamera.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Scan Marker</h3>
+                    <p>Arahkan kamera smartphone ke marker yang sudah dicetak.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Jelajahi!</h3>
+                    <p>Objek 3D akan muncul dan Anda bisa baca informasi lengkapnya.</p>
+                </div>
+            </div>
+        </section>
+    </div>
 
-        <!-- Barcode 3: Kapak Genggam (Ganti dari Arca Buddha) -->
-        <a-marker type="barcode" value="3">
-            <a-entity 
-                gltf-model="url(models/arca-buddha.glb)" 
-                scale="0.6 0.6 0.6" 
-                position="0 0.3 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 4: Kjokkenmoddinger (TEMP - Pakai Homo Erectus) -->
-        <a-marker type="barcode" value="4">
-            <a-entity 
-                gltf-model="url(models/homo-erectus.glb)" 
-                scale="0.4 0.4 0.4" 
-                position="0 0.2 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 5: Menhir (TEMP - Pakai Borobudur) -->
-        <a-marker type="barcode" value="5">
-            <a-entity 
-                gltf-model="url(Borobudur.glb)" 
-                scale="0.7 0.7 0.7" 
-                position="0 0.4 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 6: Prambanan (TEMP - Pakai Arca Buddha) -->
-        <a-marker type="barcode" value="6">
-            <a-entity 
-                gltf-model="url(models/arca-buddha.glb)" 
-                scale="1 1 1" 
-                position="0 0.5 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 7: Kapak Lonjong (Ganti dari Brahma) -->
-        <a-marker type="barcode" value="7">
-            <a-entity 
-                gltf-model="url(models/brahma.glb)" 
-                scale="0.5 0.5 0.5" 
-                position="0 0.3 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 8: Meganthropus (TEMP - Pakai Brahma) -->
-        <a-marker type="barcode" value="8">
-            <a-entity 
-                gltf-model="url(models/brahma.glb)" 
-                scale="0.4 0.4 0.4" 
-                position="0 0.3 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-        <!-- Barcode 9: Homo Erectus (OK - Original) -->
-        <a-marker type="barcode" value="9">
-            <a-entity 
-                gltf-model="url(models/homo-erectus.glb)" 
-                scale="0.4 0.4 0.4" 
-                position="0 0.3 0" 
-                rotation="-90 0 0">
-            </a-entity>
-        </a-marker>
-
-    </a-scene>
-
-    <script>
-        const loading = document.querySelector('#loading');
-        const infoOverlay = document.getElementById('info-overlay');
-        const infoContent = document.getElementById('info-content');
-
-        const objInfo = {
-            '0': {
-                title: "🕌 Candi Borobudur (Barcode 0)",
-                html: '<p><strong>Candi Borobudur</strong> dibangun pada masa Dinasti Syailendra sekitar tahun <strong>780–830 M</strong> oleh Raja Samaratungga dengan arsitek Gunadharma.</p><p>Nama Borobudur dari kata <em>Vihara Buddha Uhr</em> (biara Buddha di atas bukit). Dibangun setinggi 34,5 meter dengan 2 juta balok batu andesit tanpa semen, menggunakan sistem <strong>interlocking</strong>.</p><h2>Struktur</h2><ul><li><strong>Kamadhatu</strong> - dunia nafsu (160 relief karma)</li><li><strong>Rupadhatu</strong> - dunia bentuk (1.300 relief, 432 arca Buddha)</li><li><strong>Arupadhatu</strong> - dunia tanpa bentuk (72 stupa berlubang)</li></ul><p>Bentuk dari atas menyerupai <strong>mandala</strong>, melambangkan perjalanan spiritual menuju nirwana.</p>'
-            },
-            '1': {
-                title: "📜 Prasasti Ciaruteun (Barcode 1)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Prasasti peninggalan <strong>Kerajaan Tarumanegara</strong> ditemukan di Cibungbulang, Bogor.</p><h2>Struktur</h2><ul><li><strong>Inskripsi A:</strong> 4 baris aksara Pallawa bahasa Sanskerta</li><li><strong>Inskripsi B:</strong> 1 baris, belum terbaca jelas</li></ul><h2>Makna</h2><p>Terdapat gambar <strong>sepasang telapak kaki Raja Purnawarman</strong> yang disamakan dengan kaki Dewa Wisnu sebagai penghormatan.</p>'
-            },
-            '2': {
-                title: "🪨 Dolmen (Barcode 2)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dari bahasa Breton: "dol" (meja) + "men" (batu). Meja batu besar dari batu tegak penyangga dan batu datar di atasnya.</p><h2>Fungsi</h2><ul><li>Tempat sesaji untuk arwah nenek moyang</li><li>Penutup kubur batu</li></ul><h2>Lokasi</h2><p>Bondowoso, Puger (Jawa Timur), Paseman (Sumsel), Sumba (NTT)</p><p>Menunjukkan <strong>stratifikasi sosial</strong> - hanya tokoh penting dikuburkan dengan Dolmen.</p>'
-            },
-            '3': {
-                title: "🪓 Kapak Genggam (Barcode 3)",
-                html: '<p><strong>Kapak Genggam</strong> adalah alat batu tertua dari masa <strong>Paleolitikum</strong> (Zaman Batu Tua). Berbentuk seperti daun dengan kedua sisi diasah tajam, digunakan langsung dengan tangan tanpa tangkai.</p><h2>Fungsi Utama</h2><ul><li><strong>Memotong daging</strong> hewan buruan</li><li><strong>Menguliti</strong> binatang hasil berburu</li><li><strong>Mengolah kayu</strong> untuk berbagai keperluan</li><li><strong>Menggali umbi</strong> sebagai sumber makanan</li><li><strong>Memecah tulang atau batu kecil</strong></li></ul><h2>Penemuan di Indonesia</h2><p>Ditemukan pertama kali di <strong>Pacitan, Jawa Timur</strong> oleh Von Koenigswald (1930-an), melahirkan istilah <strong>"Kebudayaan Pacitan"</strong>. Juga ditemukan di Kalimantan Selatan, Sulawesi Selatan, Sumatera Utara, dan Lombok.</p><p>Dikaitkan dengan <strong>Homo Erectus</strong> dan menunjukkan kemampuan manusia purba beradaptasi dengan lingkungan.</p>'
-            },
-            '4': {
-                title: "🐚 Kjokkenmoddinger (Barcode 4)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dari Denmark: "kjokken" (dapur) + "modding" (sampah). Tumpukan kulit kerang manusia purba tepi pantai masa Mesolitikum.</p><h2>Ciri-ciri</h2><ul><li>Tumpukan kulit kerang/siput</li><li>Alat batu sederhana (kapak genggam)</li><li>Pola berburu dan meramu</li><li>Di pesisir pantai/muara sungai</li></ul><h2>Lokasi di Indonesia</h2><p>Sumatra Utara (Lhok Seumawe, Medan), Sumatra Timur (Langsa, Binjai)</p><p>Bukti kehidupan <strong>semi-nomaden</strong> bergantung hasil laut.</p>'
-            },
-            '5': {
-                title: "🗿 Menhir (Barcode 5)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Batu tegak megalitik sebagai penghormatan leluhur dan simbol arwah dalam upacara keagamaan prasejarah.</p><h2>Fungsi</h2><ul><li>Batu peringatan dan tanda kubur</li><li>Medium pemujaan roh nenek moyang</li><li>Simbol hubungan manusia-dunia spiritual</li></ul><h2>Transformasi</h2><p>Pada Islamisasi Maluku (Kerajaan Hitu), batu tegak diadaptasi jadi <strong>nisan makam Islam</strong>.</p><p>Menunjukkan <strong>akulturasi</strong> Islam dengan tradisi megalitik - penghormatan leluhur tetap terjaga.</p>'
-            },
-            '6': {
-                title: "🛕 Candi Prambanan (Barcode 6)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Dibangun era <strong>Kerajaan Mataram Kuno</strong> (abad 8-10). Terdiri <strong>240 struktur candi</strong>.</p><h2>Sejarah</h2><p>Dimulai oleh <strong>Rakai Pikatan</strong>, diresmikan <strong>778 Saka (856 M)</strong> oleh Rakai Kayuwangi.</p><h2>Arsitektur</h2><p>Berdasarkan <strong>Prasasti Siwagraha</strong>, didedikasikan untuk <strong>Trimurti</strong> (Wisnu, Brahma, Siwa). Mengikuti pola <strong>mandala</strong> dan bentuk <strong>Gunung Mahameru</strong>.</p><p>Struktur mencerminkan kosmologi Hindu tiga loka (ranah alam semesta).</p>'
-            },
-            '7': {
-                title: "🪨 Kapak Lonjong (Barcode 7)",
-                html: '<p><strong>Kapak Lonjong</strong> (Walzenbeil/Kleinbeil) adalah penanda peralihan dari <strong>Paleolitikum ke Neolitikum</strong> (Zaman Batu Muda). Berbentuk lonjong/elips, diproduksi dengan teknik pengasahan (gerinda) sehingga permukaannya halus dan licin.</p><h2>Fungsi Utama</h2><ul><li><strong>Menggarap tanah</strong> seperti cangkul untuk pertanian</li><li><strong>Menebang pohon</strong> untuk membuka lahan</li><li><strong>Membuka lahan pertanian</strong> secara efisien</li><li><strong>Alat bertangkai</strong> untuk pekerjaan berat (beliung)</li><li><strong>Kleinbeil (ukuran kecil):</strong> Digunakan untuk ritual, pusaka, atau lambang status sosial</li></ul><h2>Revolusi Neolitikum</h2><p>Menandai pergeseran dari <strong>food gathering</strong> (mengumpulkan makanan) menjadi <strong>food producing</strong> (menghasilkan makanan melalui pertanian).</p><h2>Persebaran</h2><p>Terkonsentrasi di <strong>Indonesia Timur</strong>: Papua, Maluku, Sulawesi. Dibawa oleh penutur bahasa Austronesia purba. Di Lembah Baliem Papua, tradisi penggunaannya bertahan hingga abad ke-20.</p>'
-            },
-            '8': {
-                title: "🦴 Meganthropus Paleojavanicus (Barcode 8)",
-                html: '<p><em>⚠️ Model sementara - Sedang dalam proses pembuatan</em></p><p>Manusia purba tertua di Indonesia, fosil ditemukan di <strong>Sangiran</strong> oleh <strong>von Koenigswald (1937-1941)</strong>. Hidup <strong>1-2 juta tahun lalu</strong>.</p><h2>Ciri Fisik</h2><ul><li>Tinggi ±2,5 m, postur besar kokoh</li><li>Otak ±900 cc</li><li>Dahi tebal, tulang pipi kuat</li><li>Gigi geraham besar kuat</li><li>Berjalan membungkuk</li><li>Tangan lebih panjang dari kaki</li></ul><h2>Kehidupan</h2><p><strong>Nomaden</strong>, herbivora (umbi, akar, biji). Ditemukan alat batu sederhana (kapak genggam).</p>'
-            },
-            '9': {
-                title: "🚶 Homo Erectus (Barcode 9)",
-                html: '<p>Fosil pertama ditemukan <strong>Eugene Dubois (1891)</strong> di Trinil, Jawa Timur. Hidup <strong>1,5 juta - 300 ribu tahun lalu</strong>.</p><h2>Ciri Fisik</h2><ul><li>Tinggi 160-170 cm, tubuh tegap</li><li>Otak 750-1.200 cc</li><li>Dahi miring, alis tebal</li><li>Berjalan tegak sepenuhnya</li></ul><h2>Kemajuan</h2><ul><li>Membuat <strong>alat batu</strong> (kapak genggam)</li><li><strong>Menguasai api</strong> pertama kali</li><li>Pakai <strong>kulit binatang</strong> sebagai pakaian</li><li>Hidup <strong>berkelompok</strong></li></ul><p>Menunjukkan kesadaran sosial dan budaya awal.</p>'
-            }
-        };
-
-        const markers = document.querySelectorAll('a-marker');
-        
-        markers.forEach(marker => {
-            marker.addEventListener('markerFound', function() {
-                const barcodeValue = this.getAttribute('value');
-                console.log('✅ Marker found: Barcode ' + barcodeValue);
-                
-                loading.style.display = 'none';
-                showInfo(barcodeValue);
-            });
-
-            marker.addEventListener('markerLost', function() {
-                const barcodeValue = this.getAttribute('value');
-                console.log('❌ Marker lost: Barcode ' + barcodeValue);
-                
-                loading.style.display = 'block';
-                loading.textContent = 'Marker hilang, cari marker untuk melanjutkan...';
-                infoOverlay.classList.remove('show');
-            });
-        });
-
-        function showInfo(barcodeValue) {
-            const info = objInfo[barcodeValue];
-            if (info) {
-                infoContent.innerHTML = '<h1>' + info.title + '</h1>' + info.html + '<button id="close-info">Tutup</button>';
-                
-                const closeBtn = document.getElementById('close-info');
-                if (closeBtn) {
-                    closeBtn.onclick = function() {
-                        infoOverlay.classList.remove('show');
-                    };
-                }
-                
-                infoOverlay.classList.add('show');
-            }
-        }
-
-        infoOverlay.addEventListener('click', function(e) {
-            if (e.target.id === 'info-overlay') {
-                infoOverlay.classList.remove('show');
-            }
-        });
-
-        setTimeout(function() {
-            loading.textContent = 'Cari barcode marker (0-9) dengan kamera untuk memulai...';
-        }, 2000);
-    </script>
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 AR Sejarah Indonesia. Dibuat dengan ❤️ untuk pendidikan.</p>
+        <p>Teknologi: A-Frame, AR.js, Pannellum</p>
+    </div>
 </body>
 </html>
