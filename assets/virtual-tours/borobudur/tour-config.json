@@ -1,104 +1,118 @@
 {
   "default": {
-    "firstScene": "stupa",
+    "firstScene": "stupa-utama",
     "author": "AR Sejarah Indonesia",
     "sceneFadeDuration": 1000,
     "autoLoad": true
   },
-
   "scenes": {
-    "stupa": {
+    "stupa-utama": {
       "title": "Stupa Utama Borobudur",
-      "hfov": 110,
-      "pitch": -5,
-      "yaw": 0,
       "type": "equirectangular",
       "panorama": "scene-1.jpg",
-      "hotSpots": [
-        {
-          "pitch": -15,
-          "yaw": 90,
-          "type": "scene",
-          "text": "Ke Lorong Relief",
-          "sceneId": "relief"
-        },
-        {
-          "pitch": -20,
-          "yaw": -90,
-          "type": "scene",
-          "text": "Ke Pemandangan Atas",
-          "sceneId": "view"
-        },
-        {
-          "pitch": 0,
-          "yaw": 0,
-          "type": "info",
-          "text": "Tentang Stupa Utama",
-          "description": "Stupa utama Borobudur memiliki diameter 9.9 meter dan tinggi 42 meter dari permukaan tanah. Stupa ini melambangkan kesempurnaan pencerahan Buddha."
-        }
-      ]
-    },
-
-    "relief": {
-      "title": "Lorong Relief Borobudur",
-      "hfov": 110,
       "pitch": 0,
       "yaw": 180,
-      "type": "equirectangular",
-      "panorama": "scene-2.jpg",
+      "hfov": 100,
+      "description": "Stupa utama Borobudur adalah puncak tertinggi yang melambangkan Arupadhatu (dunia tanpa bentuk). Di sekitarnya terdapat 72 stupa berlubang yang masing-masing berisi arca Buddha.",
+      "facts": [
+        "Tinggi stupa utama: 35 meter dari permukaan tanah",
+        "Diameter stupa utama: 9,9 meter",
+        "72 stupa berlubang melambangkan pencapaian nirwana",
+        "Arca Buddha di dalam stupa bisa dilihat dari lubang-lubang berlian"
+      ],
+      "history": "Dibangun pada abad ke-9 Masehi oleh Dinasti Syailendra sebagai monumen Buddha Mahayana terbesar di dunia.",
       "hotSpots": [
         {
           "pitch": -10,
-          "yaw": 0,
+          "yaw": 90,
           "type": "scene",
-          "text": "Kembali ke Stupa",
-          "sceneId": "stupa"
-        },
-        {
-          "pitch": -15,
-          "yaw": 120,
-          "type": "scene",
-          "text": "Ke Pemandangan Atas",
-          "sceneId": "view"
+          "text": "Lihat Lorong Relief",
+          "sceneId": "lorong-relief"
         },
         {
           "pitch": 5,
-          "yaw": 90,
+          "yaw": 270,
           "type": "info",
-          "text": "Relief Borobudur",
-          "description": "Borobudur memiliki 2.672 panel relief yang menceritakan kisah perjalanan spiritual menuju pencerahan. Relief ini merupakan karya seni Buddha terbesar di dunia."
+          "text": "Tentang 72 Stupa Berlubang",
+          "description": "72 stupa berlubang ini berisi arca Buddha dalam posisi Dharmachakra Mudra (memutar roda dharma). Stupa berbentuk lonceng dengan lubang-lubang berlian yang memungkinkan pengunjung melihat arca Buddha di dalamnya."
         }
       ]
     },
-
-    "view": {
-      "title": "Pemandangan dari Atas Borobudur",
-      "hfov": 110,
-      "pitch": -10,
-      "yaw": 270,
+    "lorong-relief": {
+      "title": "Lorong Relief Borobudur",
       "type": "equirectangular",
-      "panorama": "scene-3.jpg",
+      "panorama": "scene-2.jpg",
+      "pitch": 0,
+      "yaw": 180,
+      "hfov": 100,
+      "description": "Lorong relief Borobudur menceritakan berbagai kisah kehidupan Buddha melalui 2.672 panel relief yang menghiasi dinding candi.",
+      "facts": [
+        "Total 2.672 panel relief di seluruh candi",
+        "Relief menceritakan kisah Lalitavistara, Jataka, Avadana, dan Gandavyuha",
+        "504 arca Buddha tersebar di lorong-lorong",
+        "Pengunjung tradisional berjalan searah jarum jam (pradaksina)"
+      ],
+      "history": "Relief dibuat dengan teknik pahat tinggi (high relief) dan pahat rendah (bas relief) yang menggambarkan ajaran Buddha secara visual.",
       "hotSpots": [
+        {
+          "pitch": 0,
+          "yaw": 0,
+          "type": "scene",
+          "text": "Kembali ke Stupa Utama",
+          "sceneId": "stupa-utama"
+        },
         {
           "pitch": -5,
           "yaw": 180,
           "type": "scene",
-          "text": "Kembali ke Stupa",
-          "sceneId": "stupa"
+          "text": "Lihat Pemandangan dari Atas",
+          "sceneId": "pemandangan"
         },
         {
-          "pitch": -8,
-          "yaw": 45,
-          "type": "scene",
-          "text": "Ke Lorong Relief",
-          "sceneId": "relief"
-        },
-        {
-          "pitch": -20,
+          "pitch": 10,
           "yaw": 90,
           "type": "info",
-          "text": "Lokasi Borobudur",
-          "description": "Borobudur dibangun pada abad ke-9 Masehi di dataran tinggi Kedu, Magelang. Candi ini menghadap empat arah mata angin dan dikelilingi oleh gunung berapi."
+          "text": "Relief Lalitavistara",
+          "description": "Relief Lalitavistara menceritakan kehidupan Buddha Gautama dari kelahiran hingga mencapai pencerahan. Terdiri dari 120 panel yang terletak di lorong pertama."
+        }
+      ]
+    },
+    "pemandangan": {
+      "title": "Pemandangan dari Atas Borobudur",
+      "type": "equirectangular",
+      "panorama": "scene-3.jpg",
+      "pitch": -10,
+      "yaw": 270,
+      "hfov": 100,
+      "description": "Dari puncak Borobudur, Anda dapat melihat pemandangan spektakuler dataran Kedu yang dikelilingi oleh gunung-gunung berapi.",
+      "facts": [
+        "Borobudur dibangun di dataran tinggi Kedu, Magelang",
+        "Dikelilingi oleh Gunung Merapi, Merbabu, dan Sumbing",
+        "Struktur candi menghadap empat arah mata angin",
+        "Tinggi total candi: 42 meter dari permukaan tanah"
+      ],
+      "history": "Lokasi Borobudur dipilih secara strategis di tengah dataran yang dikelilingi gunung, melambangkan konsep kosmologi Buddha tentang Gunung Meru sebagai pusat alam semesta.",
+      "hotSpots": [
+        {
+          "pitch": 0,
+          "yaw": 90,
+          "type": "scene",
+          "text": "Lihat Lorong Relief",
+          "sceneId": "lorong-relief"
+        },
+        {
+          "pitch": 10,
+          "yaw": 270,
+          "type": "scene",
+          "text": "Kembali ke Stupa Utama",
+          "sceneId": "stupa-utama"
+        },
+        {
+          "pitch": -15,
+          "yaw": 0,
+          "type": "info",
+          "text": "Arsitektur Borobudur",
+          "description": "Borobudur terdiri dari 9 tingkat: 6 tingkat berbentuk bujur sangkar dan 3 tingkat berbentuk lingkaran. Struktur ini melambangkan perjalanan spiritual dari Kamadhatu (dunia nafsu), Rupadhatu (dunia bentuk), hingga Arupadhatu (dunia tanpa bentuk)."
         }
       ]
     }
