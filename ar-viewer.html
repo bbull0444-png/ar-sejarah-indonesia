@@ -729,6 +729,45 @@ Tips:
                 console.log('Page visible - AR resumed');
             }
         });
+        
     </script>
+// === FALLBACK HIDE LOADING ===
+window.addEventListener('load', function() {
+    console.log('Window fully loaded');
+    
+    // Wait 3 seconds then force hide loading
+    setTimeout(function() {
+        const loading = document.getElementById('loading');
+        if (loading) {
+            console.log('Force hiding loading screen');
+            loading.style.display = 'none';
+        }
+    }, 3000);
+});
+
+// === ALTERNATIVE: Hide when A-Frame ready ===
+document.addEventListener('DOMContentLoaded', function() {
+    const scene = document.querySelector('a-scene');
+    
+    if (scene) {
+        scene.addEventListener('renderstart', function() {
+            console.log('A-Frame render started');
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        });
+    }
+    
+    // Emergency fallback: Hide after 5 seconds no matter what
+    setTimeout(function() {
+        const loading = document.getElementById('loading');
+        if (loading && loading.style.display !== 'none') {
+            console.log('Emergency: Force hiding loading');
+            loading.style.display = 'none';
+        }
+    }, 5000);
+});
+</script>
 </body>
 </html>
