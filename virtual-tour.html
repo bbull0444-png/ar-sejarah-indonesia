@@ -550,7 +550,7 @@
 
         // Get temple parameter from URL
         const urlParams = new URLSearchParams(window.location.search);
-        templeName = urlParams.get('temple') || 'borobudur, prambanan';
+        templeName = urlParams.get('temple') || 'borobudur';
 
         // Temple metadata
         const templeMetadata = {
@@ -558,6 +558,11 @@
                 title: 'Candi Borobudur',
                 subtitle: 'Kompleks candi Buddha terbesar di dunia',
                 configPath: 'assets/virtual-tours/borobudur/tour-config.json'
+
+          // Get tour parameter from URL
+          const urlParams = new URLSearchParams(window.location.search);
+          tourName = urlParams.get('temple') || 'prambanan';
+          const tourMetadata = {
             },
             prambanan: {
                 title: 'Candi Prambanan',
